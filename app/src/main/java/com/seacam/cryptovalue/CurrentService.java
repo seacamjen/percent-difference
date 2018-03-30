@@ -88,22 +88,28 @@ public class CurrentService {
 
     }
 
-    public static ArrayList<Rate> processResults(Response response){
+    public ArrayList<Rate> processResults(Response response){
         ArrayList<Rate> rates = new ArrayList<>();
 
         try{
             String jsonData = response.body().string();
             JSONObject cryptoJSON = new JSONObject(jsonData);
-            JSONArray exchangeJSON = cryptoJSON.getJSONArray("exchange");
-            for (int i = 0; i <exchangeJSON.length(); i++){
-                JSONObject amountJSON = exchangeJSON.getJSONObject(i);
-                String name = "ETH";
-                double cost = amountJSON.getJSONObject("ETH_USD").getDouble("buy_price");
-                String site = "EXMO";
+            String name = "ETH";
+            double cost = cryptoJSON.getDouble("last");
+            String site = "EXMO";
 
-                Rate rate = new Rate(name, cost, site);
-                rates.add(rate);
-            }
+            Rate rate = new Rate(name, cost, site);
+            rates.add(rate);
+//            JSONArray exchangeJSON = cryptoJSON.getJSONArray("ETH_USD");
+//            for (int i = 0; i < cryptoJSON.length(); i++){
+//                JSONObject amountJSON = cryptoJSON.getJSONObject(i);
+//                String name = "ETH";
+//                double cost = amountJSON.getJSONObject("ETH_USD").getDouble("buy_price");
+//                String site = "EXMO";
+//
+//                Rate rate = new Rate(name, cost, site);
+//                rates.add(rate);
+//            }
         }
         catch (IOException e){
             e.printStackTrace();
