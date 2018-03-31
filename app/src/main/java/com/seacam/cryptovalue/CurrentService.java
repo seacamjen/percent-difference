@@ -88,7 +88,7 @@ public class CurrentService {
 
     }
 
-    public ArrayList<Rate> processResults(Response response){
+    public ArrayList<Rate> processCexResults(Response response){
         ArrayList<Rate> rates = new ArrayList<>();
 
         try{
@@ -96,20 +96,80 @@ public class CurrentService {
             JSONObject cryptoJSON = new JSONObject(jsonData);
             String name = "ETH";
             double cost = cryptoJSON.getDouble("last");
+            String site = "CEX";
+
+            Rate rate = new Rate(name, cost, site);
+            rates.add(rate);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return rates;
+    }
+
+    public ArrayList<Rate> processExmoResults(Response response){
+        ArrayList<Rate> rates = new ArrayList<>();
+
+        try{
+            String jsonData = response.body().string();
+            JSONObject cryptoJSON = new JSONObject(jsonData);
+            JSONObject ethStuff = cryptoJSON.getJSONObject("ETH_USD");
+            String name = "ETH";
+            double cost = ethStuff.getDouble("buy_price");
             String site = "EXMO";
 
             Rate rate = new Rate(name, cost, site);
             rates.add(rate);
-//            JSONArray exchangeJSON = cryptoJSON.getJSONArray("ETH_USD");
-//            for (int i = 0; i < cryptoJSON.length(); i++){
-//                JSONObject amountJSON = cryptoJSON.getJSONObject(i);
-//                String name = "ETH";
-//                double cost = amountJSON.getJSONObject("ETH_USD").getDouble("buy_price");
-//                String site = "EXMO";
-//
-//                Rate rate = new Rate(name, cost, site);
-//                rates.add(rate);
-//            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return rates;
+    }
+
+    public ArrayList<Rate> processGdaxResults(Response response){
+        ArrayList<Rate> rates = new ArrayList<>();
+
+        try{
+            String jsonData = response.body().string();
+            JSONObject cryptoJSON = new JSONObject(jsonData);
+            String name = "ETH";
+            double cost = cryptoJSON.getDouble("price");
+            String site = "GDAX";
+
+            Rate rate = new Rate(name, cost, site);
+            rates.add(rate);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return rates;
+    }
+
+    public ArrayList<Rate> processKrackenResults(Response response){
+        ArrayList<Rate> rates = new ArrayList<>();
+
+        try{
+            String jsonData = response.body().string();
+            JSONObject cryptoJSON = new JSONObject(jsonData);
+            JSONObject drillDown = cryptoJSON.getJSONObject("result");
+            JSONObject anotherDown = drillDown.getJSONObject("XETHZUSD");
+            JSONArray ethStuff = anotherDown.getJSONArray("a");
+            String name = "ETH";
+            double cost = ethStuff.getDouble(0);
+            String site = "KRACKEN";
+
+            Rate rate = new Rate(name, cost, site);
+            rates.add(rate);
         }
         catch (IOException e){
             e.printStackTrace();
